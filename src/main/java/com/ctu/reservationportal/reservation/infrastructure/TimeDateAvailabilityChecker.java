@@ -1,5 +1,5 @@
 package main.java.com.ctu.reservationportal.reservation.infrastructure;
-import main.java.com.ctu.reservationportal.reservation.infrastructure.CreateBooking;
+import main.java.com.ctu.reservationportal.reservation.infrastructure.Create;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,13 @@
 <component name="libraryTable">
   <library name="mysql-connector-j-8.4.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/mysql db/mysql-connector-j-8.4.0/mysql-connector-j-8.4.0/mysql-connector-j-8.4.0.jar!/" />
+      <root url="file://$PROJECT_DIR$" />
+      <root url="file://$PROJECT_DIR$/../../kyle/db" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../../kyle/db" recursive="false" />
   </library>
 </component>

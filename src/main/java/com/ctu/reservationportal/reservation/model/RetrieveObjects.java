@@ -1,146 +1,99 @@
 package main.java.com.ctu.reservationportal.reservation.model;
-import main.java.com.ctu.reservationportal.reservation.infrastructure.Retrieve;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
 
 /**
- * The type Retrieve objects.
+ * The RetrieveObjects class handles the retrieval of booking information from a database.
  */
 public class RetrieveObjects {
-    private Retrieve retrieveInfo;
-    private int bookingID;
-    private int date;
-    private int time;
-    private String roomInformation;
-    private Map<Integer, Retrieve.BookingInfo> bookings;
 
     /**
-     * Instantiates a new Retrieve objects.
+     * Retrieves booking information based on user input.
      *
-     * @param bookingID       the booking id
-     * @param date            the date
-     * @param time            the time
-     * @param roomInformation the room information
+     * @param scanner The Scanner instance to use for user input.
+     * @return The BookingInfo object representing the retrieved booking, or null if not found.
      */
-    public RetrieveObjects(int bookingID, String date, String time, String roomInformation) {
-        this.bookingID = bookingID;
-        this.date = Integer.parseInt(date);
-        this.time = Integer.parseInt(time);
-        this.roomInformation = roomInformation;
-        this.bookings = new HashMap<Integer, Retrieve.BookingInfo>();
+    public BookingInfo getBooking(Scanner scanner) {
+        System.out.print("Enter booking ID: ");
+        int bookingID = scanner.nextInt();
+        return retrieveBookingFromDB(bookingID);
     }
 
     /**
-     * Instantiates a new Retrieve objects.
+     * Retrieves booking information from the database.
      *
-     * @param retrieveInfo the retrieve info
+     * @param bookingID The ID of the booking to retrieve.
+     * @return The BookingInfo object representing the retrieved booking, or null if not found.
      */
-    public RetrieveObjects(Retrieve retrieveInfo) {
-        this.retrieveInfo = retrieveInfo;
-        this.bookings = new HashMap<Integer, Retrieve.BookingInfo>();
+    public BookingInfo retrieveBookingFromDB(int bookingID) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/booking_schema", "root", "admin123$");
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM RESERVATION_BOOKING_RECORDS WHERE bookingID=?")) {
+
+            preparedStatement.setInt(1, bookingID);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int retrievedBookingID = resultSet.getInt("bookingID");
+                    String date = resultSet.getString("date");
+                    String time = resultSet.getString("time");
+                    String room = resultSet.getString("room");
+
+                    return new BookingInfo(retrievedBookingID, date, time, room);
+                } else {
+                    System.out.println("Booking not found for ID: " + bookingID);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("An SQL error occurred: " + e.getMessage());
+        }
+
+        return null;
     }
 
     /**
-     * Gets retrieve info.
-     *
-     * @return the retrieve info
+     * Represents booking information retrieved from the database.
      */
-    public Retrieve getRetrieveInfo() {
-        return retrieveInfo;
-    }
+    public static class BookingInfo {
+        private int bookingID;
+        private String date;
+        private String time;
+        private String roomInformation;
 
-    /**
-     * Sets retrieve info.
-     *
-     * @param retrieveInfo the retrieve info
-     */
-    public void setRetrieveInfo(Retrieve retrieveInfo) {
-        this.retrieveInfo = retrieveInfo;
-    }
+        /**
+         * Constructs a new BookingInfo instance.
+         *
+         * @param bookingID       The ID of the booking.
+         * @param date            The date of the booking.
+         * @param time            The time of the booking.
+         * @param roomInformation The room information of the booking.
+         */
+        public BookingInfo(int bookingID, String date, String time, String roomInformation) {
+            this.bookingID = bookingID;
+            this.date = date;
+            this.time = time;
+            this.roomInformation = roomInformation;
+        }
 
-    /**
-     * Gets booking id.
-     *
-     * @return the booking id
-     */
-    public int getBookingID() {
-        return bookingID;
-    }
-    public void setBookingID(){
-        this.bookingID = bookingID;
-    }
+        public int getBookingID() {
+            return bookingID;
+        }
 
-    /**
-     * Gets date.
-     *
-     * @return the date
-     */
-    public int getDate() {
-        return date;
-    }
+        public String getDate() {
+            return date;
+        }
 
-    /**
-     * Sets date.
-     *
-     * @param date the date
-     */
-    public void setDate(int date) {
-        this.date = date;
-    }
+        public String getTime() {
+            return time;
+        }
 
-    /**
-     * Gets time.
-     *
-     * @return the time
-     */
-    public int getTime() {
-        return time;
-    }
+        public String getRoomInformation() {
+            return roomInformation;
+        }
 
-    /**
-     * Sets time.
-     *
-     * @param time the time
-     */
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    /**
-     * Sets room information.
-     *
-     * @param roomInformation the room information
-     */
-    public void setRoomInformation(String roomInformation) {
-        this.roomInformation = roomInformation;
-    }
-
-    /**
-     * Gets room information.
-     *
-     * @return the room information
-     */
-    public String getRoomInformation() {
-        return this.roomInformation;
-    }
-
-    /**
-     * Gets bookings.
-     *
-     * @return the bookings
-     */
-    public Map<Integer, Retrieve.BookingInfo> getBookings() {
-        return bookings;
-    }
-
-    /**
-     * Add booking.
-     *
-     * @param bookingID the booking id
-     * @param booking   the booking
-     */
-    public void addBooking(int bookingID, Retrieve.BookingInfo booking) {
-        bookings.put(bookingID, booking);
     }
 }
