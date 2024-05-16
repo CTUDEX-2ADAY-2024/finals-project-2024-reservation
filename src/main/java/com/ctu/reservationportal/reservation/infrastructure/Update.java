@@ -131,8 +131,8 @@ public class Update {
                         "jdbc:mysql://127.0.0.1:3306/booking_schema",
                         "root",
                         "mypassword");
-                PreparedStatement preparedStatement = connection.prepareStatement(
-                        "UPDATE RESERVATION_BOOKING_RECORDS SET room=?, date=?, time=? WHERE bookingID=?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                         "UPDATE RESERVATION_BOOKING_RECORDS SET room=?, date=?, time=? WHERE bookingID=?")) {
 
             preparedStatement.setString(1, newRoomInformation);
             preparedStatement.setString(2, newDate);

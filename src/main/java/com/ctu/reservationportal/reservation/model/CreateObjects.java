@@ -1,5 +1,7 @@
 package main.java.com.ctu.reservationportal.reservation.model;
+
 import java.sql.Time;
+import java.sql.Date;
 
 /**
  * Class representing input data for booking creation.
@@ -8,140 +10,85 @@ public class CreateObjects {
 
     private String userName;
     private String email;
-    private String date;
-    private String timeInput;
-    private String room;
+    private String roomType;
+    private Time checkInTime;
+    private Time checkOutTime;
+    private Date checkInDate;
+    private Date checkOutDate;
     private int bookingId;
 
-
-    /**
-     * Constructs a CreateObjects instance with the provided information.
-     *
-     * @param userName the username
-     * @param email    the email
-     * @param date     the date
-     * @param timeInput     the time
-     * @param room     the room
-     */
-    public CreateObjects(String userName, String email, String date, String timeInput, String room) {
+    public CreateObjects(String userName, String email, String roomType, Time checkInTime, Time checkOutTime, Date checkInDate, Date checkOutDate) {
         this.userName = userName;
         this.email = email;
-        this.date = date;
-        this.timeInput = timeInput;
-        this.room = room;
+        this.roomType = roomType;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
     }
 
-    /**
-     * Sets the username.
-     *
-     * @param userName the username
-     */
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    /**
-     * Sets the email.
-     *
-     * @param email the email
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    /**
-     * Sets the date.
-     *
-     * @param date the date
-     */
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    /**
-     * Sets the time.
-     *
-     * @param timeInput the time
-     */
-    public void setTimeInput(String timeInput) {
-        this.timeInput = timeInput;
-    }
-
-    /**
-     * Sets the room.
-     *
-     * @param room the room
-     */
-    public void setRoom(String room) {
-        this.room = room;
-    }
-
-    /**
-     * Gets the username.
-     *
-     * @return the username
-     */
     public String getUserName() {
         return userName;
     }
 
-    /**
-     * Gets the email.
-     *
-     * @return the email
-     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getEmail() {
         return email;
     }
 
-    /**
-     * Gets the date.
-     *
-     * @return the date
-     */
-    public String getDate() {
-        return date;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    /**
-     * Gets the time.
-     *
-     * @return the time
-     */
-    public String getTimeInput() {
-        return timeInput;
+    public String getRoomType() {
+        return roomType;
     }
 
-    /**
-     * Gets the room.
-     *
-     * @return the room
-     */
-    public String getRoom() {
-        return room;
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
     }
 
-    /**
-     * Gets the booking ID.
-     *
-     * @return the booking ID
-     */
+    public Time getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(Time checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public Time getCheckOutTime() {
+        return checkOutTime;
+    }
+
+    public void setCheckOutTime(Time checkOutTime) {
+        this.checkOutTime = checkOutTime;
+    }
+
+    public Date getCheckInDate() {
+        return checkInDate;
+    }
+
+    public void setCheckInDate(Date checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public Date getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(Date checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
+
     public int getBookingId() {
         return bookingId;
     }
 
-    /**
-     * Sets the booking ID.
-     *
-     * @param bookingId the booking ID
-     */
     public void setBookingId(int bookingId) {
-
         this.bookingId = bookingId;
     }
 
-    public Time convertTimeInput() {
-        String concatenated = timeInput.concat(":00");
-        return Time.valueOf(concatenated);
-    }
 }
