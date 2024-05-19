@@ -1,160 +1,94 @@
 package main.java.com.ctu.reservationportal.reservation.model;
 
-import java.util.Random;
-import java.sql.Date;
 import java.sql.Time;
+import java.sql.Date;
+
 /**
- * The type Create objects.
+ * Class representing input data for booking creation.
  */
 public class CreateObjects {
-    /**
-     * The type Input data.
-     */
-// Class to represent the input information
-        private String userName;
-        private String email;
-        private Date date;
-        private Time time;
-        private String room;
-        private int bookingID;
 
-        /**
-         * Instantiates a new Input data.
-         *
-         * @param userName the user name
-         * @param email    the email
-         * @param date     the date
-         * @param time     the time
-         * @param room     the room
-         */
-// Constructors
-        public CreateObjects(String userName, String email, Date date, Time time, String room) {
-            this.userName = userName;
-            this.email = email;
-            this.date = date;
-            this.time = time;
-            this.room = room;
-            this.bookingID = generateBookingId();
+    private String userName;
+    private String email;
+    private String roomType;
+    private Time checkInTime;
+    private Time checkOutTime;
+    private Date checkInDate;
+    private Date checkOutDate;
+    private int bookingId;
 
-        }
-
-        /**
-         * Sets user name.
-         *
-         * @param userName the user name
-         */
-//Setter Method
-        public void setUserName(String userName) {
-
-            this.userName = userName;
-        }
-
-        /**
-         * Sets email.
-         *
-         * @param email the email
-         */
-        public void setEmail(String email) {
-
-            this.email = email;
-        }
-
-        /**
-         * Sets date.
-         *
-         * @param date the date
-         */
-        public void setDate(Date date) {
-
-            this.date = date;
-        }
-
-        /**
-         * Sets time.
-         *
-         * @param time the time
-         */
-        public void setTime(Time time) {
-
-            this.time = time;
-        }
-
-        /**
-         * Sets room.
-         *
-         * @param room the room
-         */
-        public void setRoom(String room) {
-
-            this.room = room;
-        }
-        public void setBookingID (int bookingID){
-            this.bookingID = bookingID;
-        }
-
-
-        //Getter Method
-
-        /**
-         * Gets user name.
-         *
-         * @return the user name
-         */
-        public String getUserName() {
-
-            return userName;
-        }
-
-        /**
-         * Gets email.
-         *
-         * @return the email
-         */
-        public String getEmail() {
-
-            return email;
-        }
-
-        /**
-         * Gets date.
-         *
-         * @return the date
-         */
-        public Date getDate() {
-
-            return date;
-        }
-
-        /**
-         * Gets time.
-         *
-         * @return the time
-         */
-        public Time getTime() {
-
-            return time;
-        }
-
-        /**
-         * Gets room.
-         *
-         * @return the room
-         */
-        public String getRoom() {
-
-            return room;
-        }
-        public int getBookingID(){
-            return bookingID;
-        }
-
-        public int generateBookingId(){
-            Random random = new Random();
-            return random.nextInt(1000000);
-
+    public CreateObjects(String userName, String email, String roomType, Time checkInTime, Time checkOutTime, Date checkInDate, Date checkOutDate) {
+        this.userName = userName;
+        this.email = email;
+        this.roomType = roomType;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
     }
 
+    public String getUserName() {
+        return userName;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public Time getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(Time checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public Time getCheckOutTime() {
+        return checkOutTime;
+    }
+
+    public void setCheckOutTime(Time checkOutTime) {
+        this.checkOutTime = checkOutTime;
+    }
+
+    public Date getCheckInDate() {
+        return checkInDate;
+    }
+
+    public void setCheckInDate(Date checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public Date getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(Date checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
+    }
 
 }

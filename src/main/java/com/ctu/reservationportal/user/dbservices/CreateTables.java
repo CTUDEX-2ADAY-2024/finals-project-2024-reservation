@@ -1,4 +1,4 @@
-package main.java.com.ctu.reservationportal.reservation.dbservices;
+package main.java.com.ctu.reservationportal.user.dbservices;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,16 +11,26 @@ import java.sql.Statement;
  *
  */
 public class CreateTables {
-    private static final String createBookingDetailsTbl = "CREATE TABLE BookingDetails (\n" +
+
+    private static final String createUserInfoTbl =  "CREATE TABLE userInfo (\n" +
+            "    firstName VARCHAR(255),\n" +
+            "    middleName VARCHAR(255),\n" +
+            "    lastName VARCHAR(255),\n" +
+            "    birthDate DATE,\n" +
+            "    email VARCHAR(255),\n " +
+            "    phoneNumber VARCHAR(255),\n " +
+            "    street VARCHAR(255),\n" +
+            "    barangay VARCHAR(255),\n" +
+            "    municipality VARCHAR(255),\n" +
+            "    city VARCHAR(255),\n" +
+            "    zipCode INT,\n" +
+            "    nationality VARCHAR(255),\n" +
+            "    gender VARCHAR(255),\n" +
+            "    roleAtSchool VARCHAR(255),\n" +
             "    userName VARCHAR(255),\n" +
-            "    email VARCHAR(255),\n" +
-            "    checkInDate DATE,\n" +
-            "    checkOut DATE,\n" +
-            "    checkInTime TIME,\n" +
-            "    checkOutTime TIME,\n" +
-            "    roomType VARCHAR(255),\n" +
-            "    bookingId INT\n" +
+            "    idNumber INT\n" +
             ");";
+
 
     public CreateTables(){
         try {
@@ -42,10 +52,12 @@ public class CreateTables {
                 .getConnection("jdbc:mysql://127.0.0.1:3306/roomportaldb?useSSL=false&allowPublicKeyRetrieval=true", "root", "mypassword");
 
              // Step 2:Create a statement using connection object
-             Statement statement = connection.createStatement()) {
+             Statement statement = connection.createStatement();) {
 
-            System.out.println("Creating BookingDetails Table in DB");
-            statement.execute(createBookingDetailsTbl);
+            // Step 3: Execute the query or update query
+            System.out.println("Creating UserInfo Table in DB");
+            statement.execute(createUserInfoTbl);
+
 
         } catch (SQLException e) {
 
