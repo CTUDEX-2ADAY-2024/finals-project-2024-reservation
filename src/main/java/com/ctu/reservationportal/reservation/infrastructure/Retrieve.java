@@ -1,112 +1,162 @@
 package main.java.com.ctu.reservationportal.reservation.infrastructure;
+
 import main.java.com.ctu.reservationportal.reservation.model.RetrieveObjects;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import static main.java.com.ctu.reservationportal.reservation.abstraction.UsernameValidator.usernameExistsInDatabase;
+import static main.java.com.ctu.reservationportal.reservation.abstraction.RetrieveFromDB.retrieveBookingFromDB;
+import java.util.List;
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.sql.Time;
 
-
-/**
- * This class handles the retrieval of booking information.
- */
 public class Retrieve {
 
-    private Map<Integer, BookingInfo> bookings;
-
-    /**
-     * Initializes the RetrieveBooking object with an empty map of bookings.
-     */
-    public Retrieve() {
-        this.bookings = new HashMap<>();
-    }
-
-    /**
-     * Adds a booking to the map of bookings.
-     *
-     * @param bookingID the booking ID
-     * @param booking   the booking information
-     */
-    public void addBooking(int bookingID, BookingInfo booking) {
-        bookings.put(bookingID, booking);
-    }
-
-    /**
-     * Retrieves a booking from the map of bookings.
-     *
-     * @param bookingID the booking ID
-     * @return the booking information if found, null otherwise
-     */
-    public BookingInfo getBooking(int bookingID) {
-        return bookings.get(bookingID);
-    }
-
-    /**
-     * The main method to search and retrieve a booking.
-     */
-    public static void SearchNRetrieveSystem() {
+    public void searchAndRetrieveBooking() {
         try (Scanner scanner = new Scanner(System.in)) {
-            // Taking booking ID from user input
-            System.out.print("Enter booking ID: ");
-            int bookingID = scanner.nextInt();
-
-            Retrieve bookingRequest = new Retrieve();
-            BookingInfo booking = bookingRequest.getBooking(bookingID);
-            if (booking != null) {
-                // Display the booking information if found
-                System.out.println("Booking found:");
-                System.out.println("Booking ID: " + bookingID);
-                System.out.println("Date: " + booking.getDate());
-                System.out.println("Time: " + booking.getTime());
-                System.out.println("Room Information: " + booking.getRoomInformation());
-            } else {
-                // Display a message if the booking is not found
-                System.out.println("Booking not found for ID: " + bookingID);
+            for (int i = 0; i < 150; i++) {
+                System.out.print("-");
             }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+            System.out.println();
+            System.out.println("Welcome to the Reservation System!");
+            System.out.println("Search Booking Request");
+            System.out.println("1. Search and Retrieve Booking");
+            System.out.println("2. Exit");
 
-            /**
-             * Retrieves booking information from the database.
-             *
-             * @param bookingID the booking ID
-             * @return the booking information if found, null otherwise
-             */
+            int choice = scanner.nextInt();
 
+            switch (choice) {
+                case 1:
+                    System.out.println("Select filter option:");
+                    System.out.println("1. Booking ID");
+                    System.out.println("2. Room");
+                    System.out.println("3. Username");
+
+                    int filterChoice = scanner.nextInt();
+                    switch (filterChoice) {
+                        case 1:
+                            int bookingID = 0;
+                            boolean validInput = false;
+                            while (!validInput) {
+                                System.out.print("Enter booking ID: ");
+                                if (scanner.hasNextInt()) {
+                                    bookingID = scanner.nextInt();
+                                    validInput = true;
+                                } else {
+                                    System.out.println("Invalid input. Please enter a valid number.");
+                                    scanner.next();
+                                }
+                            }
+                            RetrieveObjects retrieveByID = retrieveBookingFromDB(bookingID, null, null).getFirst();
+                            printHeader();
+                            displayBookingInfo(retrieveByID);
+                            break;
+
+                        case 2:
+                            System.out.println("\nList of Room Types:\n 1. Classroom\n 2. CompLaboratory\n 3. Library\n 4. SmartRoom\n");
+                            System.out.print("Enter room type number:");
+                            int roomNumber = scanner.nextInt();
+                            String roomType = switch (roomNumber) {
+                                case 1 -> "Classroom";
+                                case 2 -> "CompLaboratory";
+                                case 3 -> "Library";
+                                case 4 -> "SmartRoom";
+                                default -> null;
+                            };
+                            if (roomType != null) {
+                                printHeader();
+                                retrieveByRoom(roomType);
+                            } else {
+                                System.out.println("Invalid room number.");
+                            }
+                            break;
+                        case 3:
+                            System.out.print("Enter username: ");
+                            String username = scanner.next();
+
+                            if (!usernameExistsInDatabase(username)) {
+                                System.out.println("Username does not exist. Please enter a valid username.");
+                                return;
+                            }
+
+                            printHeader();
+                            retrieveByUsername(username);
+                            break;
+                        default:
+                            System.out.println("Invalid choice");
+                            break;
+                    }
+                    break;
+                case 2:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+                    break;
+            }
         }
+    }
 
-        /**
-         * Inner class representing booking information.
-         */
-//    public static class BookingInfo {
-//        private int bookingID;
-//        private String date;
-//        private String time;
-//        private String roomInformation;
-//
-//        public BookingInfo(int bookingID, String date, String time, String roomInformation) {
-//            this.bookingID = bookingID;
-//            this.date = date;
-//            this.time = time;
-//            this.roomInformation = roomInformation;
-//        }
-//
-//        public int getBookingID() {
-//            return bookingID;
-//        }
-//
-//        public String getDate() {
-//            return date;
-//        }
-//
-//        public String getTime() {
-//            return time;
-//        }
-//
-//        public String getRoomInformation() {
-//            return roomInformation;
-//        }
-//    }
+    private void retrieveByRoom(String roomType) {
+        List<RetrieveObjects> bookingInfoList = retrieveBookingFromDB(0, roomType, null);
+
+        if (!bookingInfoList.isEmpty()) {
+            for (RetrieveObjects bookingInfo : bookingInfoList) {
+                displayBookingInfo(bookingInfo);
+            }
+        } else {
+            System.out.println("No bookings found for room '" + roomType + "'.");
+        }
+    }
+
+    private void retrieveByUsername(String username) {
+        List<RetrieveObjects> bookingInfoList = retrieveBookingFromDB(0, null, username);
+
+        if (!bookingInfoList.isEmpty()) {
+            for (RetrieveObjects bookingInfo : bookingInfoList) {
+                displayBookingInfo(bookingInfo);
+            }
+        } else {
+            System.out.println("No bookings found for username '" + username + "'.");
+        }
+    }
+
+    private void displayBookingInfo(RetrieveObjects bookingInfo) {
+        if (bookingInfo != null) {
+            String checkInTime12Hour = convertTo12HourFormat(bookingInfo.getCheckInTime());
+            String checkOutTime12Hour = convertTo12HourFormat(bookingInfo.getCheckOutTime());
+
+            System.out.printf("%-12d%-15s%-25s%-15s%-15s%-15s%-15s%-20s%-10s\n",
+                    bookingInfo.getBookingID(),
+                    bookingInfo.getUsername(),
+                    bookingInfo.getEmail(),
+                    bookingInfo.getCheckInDate(),
+                    bookingInfo.getCheckOutDate(),
+                    checkInTime12Hour,
+                    checkOutTime12Hour,
+                    bookingInfo.getRoomType(),
+                    bookingInfo.getRoomNumber());
+        } else {
+            System.out.println("Booking not found.");
+        }
+    }
+
+    private void printHeader() {
+        System.out.println("\nBooking found:\n");
+        for (int i = 0; i < 150; i++) {
+            System.out.print("-");
+        }
+        System.out.println();
+        System.out.printf("%-12s%-15s%-25s%-15s%-15s%-15s%-15s%-20s%-10s\n",
+                "Booking ID", "Username", "Email",
+                "Check-in Date", "Check-out Date",
+                "Check-in Time", "Check-out Time", "Room Type", "Room No");
+        for (int i = 0; i < 150; i++) {
+            System.out.print("-");
+        }
+        System.out.println();
+    }
+
+    private String convertTo12HourFormat(Time time) {
+        SimpleDateFormat sdf12Hour = new SimpleDateFormat("hh:mm a");
+        return sdf12Hour.format(time);
     }
 }
