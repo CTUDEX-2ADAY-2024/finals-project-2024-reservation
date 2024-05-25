@@ -1,156 +1,111 @@
 package main.java.com.ctu.reservationportal.reservation.infrastructure;
 
 import main.java.com.ctu.reservationportal.reservation.model.UpdateObjects;
+import main.java.com.ctu.reservationportal.reservation.abstraction.EmailUpdater;
+import main.java.com.ctu.reservationportal.reservation.abstraction.RoomTypeUpdater;
+import main.java.com.ctu.reservationportal.reservation.abstraction.UsernameUpdater;
+import main.java.com.ctu.reservationportal.reservation.abstraction.DateTimeUpdater;
+import main.java.com.ctu.reservationportal.reservation.model.RetrieveObjects;
+import main.java.com.ctu.reservationportal.reservation.abstraction.RetrieveFromDB;
+import main.java.com.ctu.reservationportal.reservation.abstraction.UpdateRecords;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
-/**
- * The UpdateBooking class manages the updating of booking details in the reservation system.
- */
 public class Update {
-    /**
-     * Update booking request system.
-     */
-    public void UpdateBookingRequestSystem() {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Welcome to the Reservation System!");
-        System.out.println("Update Booking Request");
-        System.out.println("1. Update Booking\n2. Exit");
-        int choice = input.nextInt();
-
-        if (choice == 1) {
-            updateBooking();
-        } else if (choice == 2) {
-            System.out.println("Exiting...");
-        } else {
-            System.out.println("Invalid choice");
-        }
-    }
-
-    /**
-     * Update booking.
-     */
-    private void updateBooking() {
-        System.out.println("Enter booking ID to update:");
+    public void updateBookingRequestSystem() {
         Scanner scanner = new Scanner(System.in);
-        String bookingID = scanner.next();
 
-        if (bookingID.isEmpty()) {
-            System.out.println("Booking ID cannot be empty");
-            return;
-        }
+        System.out.println("Welcome to the Reservation System!");
+        System.out.println("Update Booking Request\n");
 
-        UpdateObjects.Booking booking = fetchBookingFromDB(bookingID);
+        System.out.print("Enter booking ID to update: ");
+        int bookingID = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        RetrieveObjects booking = RetrieveFromDB.retrieveBookingFromDB(bookingID, null, null).getFirst();
         if (booking == null) {
             System.out.println("Booking not found for ID: " + bookingID);
             return;
         }
 
-        // Display booking details based on users booking ID
-        System.out.println("------------------Booking Details------------------");
-        System.out.println("Room Information: " + booking.getRoomInformation());
-        System.out.println("Date: " + booking.getDate());
-        System.out.println("Time: " + booking.getTime());
+        printHeader();
+        displayBookingInfo(booking);
 
-        // Prompts user to input new details
-        System.out.println("------------------Updating Details------------------");
-        System.out.println("Enter new room information: (Room A, Room B, Room C)");
-        String newRoomInformation = scanner.next();
-        System.out.println("Enter new date:");
-        String newDate = scanner.next();
-        System.out.println("Enter new time:");
-        String newTime = scanner.next();
+        System.out.println("\nWhat field would you like to modify?");
+        System.out.println("1. Username");
+        System.out.println("2. Email");
+        System.out.println("3. Room Type");
+        System.out.println("4. Date and Time");
+        System.out.print("\nEnter the number of the field you want to modify: ");
+        int fieldChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
 
-        // Update the booking details
-        booking.setRoomInformation(newRoomInformation);
-        booking.setDate(newDate);
-        booking.setTime(newTime);
+        UpdateObjects updateObjects = new UpdateObjects();
+        updateObjects.setBookingId(bookingID);  // Ensure the booking ID is set for the update objects
 
-        // Update the database with the new details
-        updateBookingInDB(bookingID, newRoomInformation, newTime, newDate);
+        boolean validInput = true;
+        switch (fieldChoice) {
+            case 1:
+                UsernameUpdater usernameUpdater = new UsernameUpdater(scanner, updateObjects);
+                usernameUpdater.update();
+                break;
+            case 2:
+                EmailUpdater emailUpdater = new EmailUpdater(scanner, updateObjects);
+                emailUpdater.update();
+                break;
+            case 3:
+                RoomTypeUpdater roomTypeUpdater = new RoomTypeUpdater(scanner, updateObjects);
+                roomTypeUpdater.update();
+                break;
+            case 4:
+                DateTimeUpdater dateTimeUpdater = new DateTimeUpdater(scanner, updateObjects);
+                dateTimeUpdater.updateDateTime();
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                validInput = false;
+                break;
+        }
 
-        System.out.println("-----------Updated Booking Details-----------");
-        System.out.println("Room Information: " + booking.getRoomInformation());
-        System.out.println("Date: " + booking.getDate());
-        System.out.println("Time: " + booking.getTime());
-
-        // Utilize UpdateObjects to update the booking details
-        UpdateObjects updateObjects = new UpdateObjects(this);
-        updateObjects.setRoomInformation(newRoomInformation);
-        updateObjects.setDate(newDate);
-        updateObjects.setTime(newTime);
-        updateObjects.updateBookingDetails(bookingID);
-    }
-
-    /**
-     * Fetch booking from database based on booking ID.
-     *
-     * @param bookingID the booking ID
-     * @return the booking
-     */
-    private UpdateObjects.Booking fetchBookingFromDB(String bookingID) {
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://127.0.0.1:3306/booking_schema",
-                "root",
-                "mypassword");
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT * FROM RESERVATION_BOOKING_RECORDS WHERE bookingID=?")) {
-
-            preparedStatement.setString(1, bookingID);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    String roomInformation = resultSet.getString("room");
-                    String date = resultSet.getString("date");
-                    String time = resultSet.getString("time");
-                    return new UpdateObjects.Booking(roomInformation, date, time);
+        if (validInput) {
+            UpdateRecords updateRecords = new UpdateRecords();
+            if (updateRecords.isValidBooking(updateObjects)) {
+                boolean success = updateRecords.updateBookingDetails(bookingID, updateObjects);
+                if (success) {
+                    System.out.println("\nUpdated Booking Details:");
+                    printHeader();
+                    displayBookingInfo(updateObjects);
                 }
             }
-
-        } catch (SQLException e) {
-            System.out.println("An SQL error occurred: " + e.getMessage());
         }
 
-        return null;
+        scanner.close();
     }
 
-    /**
-     * Update booking in database.
-     *
-     * @param bookingID          the booking ID
-     * @param newRoomInformation the new room information
-     * @param newDate            the new date
-     */
-    public void updateBookingInDB(String bookingID, String newRoomInformation, String newTime, String newDate) {
-        try (
-                Connection connection = DriverManager.getConnection(
-                        "jdbc:mysql://127.0.0.1:3306/booking_schema",
-                        "root",
-                        "mypassword");
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                         "UPDATE RESERVATION_BOOKING_RECORDS SET room=?, date=?, time=? WHERE bookingID=?")) {
+    private void displayBookingInfo(UpdateObjects bookingInfo) {
+        System.out.println("Booking Information:");
+        System.out.println("Username: " + bookingInfo.getUsername());
+        System.out.println("Email: " + bookingInfo.getEmail());
+        System.out.println("Room Type: " + bookingInfo.getRoomType());
+        System.out.println("Room Number: " + bookingInfo.getRoomNumber());
+        System.out.println("Check-in Date: " + bookingInfo.getCheckInDate());
+        System.out.println("Check-out Date: " + bookingInfo.getCheckOutDate());
+        System.out.println("Check-in Time: " + formatTimeTo12Hour(bookingInfo.getCheckInTime()));
+        System.out.println("Check-out Time: " + formatTimeTo12Hour(bookingInfo.getCheckOutTime()));
+    }
 
-            preparedStatement.setString(1, newRoomInformation);
-            preparedStatement.setString(2, newDate);
-            preparedStatement.setString(3, newTime);
-            preparedStatement.setString(4, bookingID);
+    private String formatTimeTo12Hour(Time time) {
+        SimpleDateFormat sdf12Hour = new SimpleDateFormat("hh:mm a");
+        return sdf12Hour.format(time);
+    }
 
-            int rowsUpdated = preparedStatement.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("______________________________________________________");
-                System.out.println("Booking details updated successfully.");
-                System.out.println("______________________________________________________");
-            } else {
-                System.out.println("Failed to update booking details.");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("An SQL error occurred: " + e.getMessage());
+    private void printHeader() {
+        System.out.println("\nBooking found:\n");
+        for (int i = 0; i < 50; i++) {
+            System.out.print("-");
         }
-
+        System.out.println();
     }
 }

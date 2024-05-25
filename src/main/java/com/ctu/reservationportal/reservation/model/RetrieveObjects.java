@@ -1,30 +1,33 @@
 package main.java.com.ctu.reservationportal.reservation.model;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.Time;
 
 /**
  * The RetrieveObjects class handles the retrieval of booking information from a database.
  */
-public class RetrieveObjects {
+public class RetrieveObjects extends UpdateObjects {
+    private int bookingID;
     private Time checkInTime;
     private Time checkOutTime;
     private Date checkInDate;
     private Date checkOutDate;
-    private int bookingID;
-    private String roomInformation;
+    private String roomNumber;
+    private String roomType;
     private String username;
     private String email;
 
     /**
-     * Constructs a new BookingInfo instance.
+     * Constructs a new RetrieveObjects instance.
      */
-    public RetrieveObjects(int retrievedBookingID, Time checkInTime, Time checkOutTime, Date checkInDate, Date checkOutDate, String roomInformation, String username, String email) {
-        this.bookingID = retrievedBookingID;
+    public RetrieveObjects(int bookingID, Time checkInTime, Time checkOutTime, Date checkInDate, Date checkOutDate, String roomNumber, String roomType, String username, String email) {
+        this.bookingID = bookingID;
         this.checkInTime = checkInTime;
         this.checkOutTime = checkOutTime;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.roomInformation = roomInformation;
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
         this.username = username;
         this.email = email;
     }
@@ -49,8 +52,12 @@ public class RetrieveObjects {
         return checkOutDate;
     }
 
-    public String getRoomInformation() {
-        return roomInformation;
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    public String getRoomType() {
+        return roomType;
     }
 
     public String getUsername() {

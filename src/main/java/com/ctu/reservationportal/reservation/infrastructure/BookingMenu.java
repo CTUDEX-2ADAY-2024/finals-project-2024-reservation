@@ -60,7 +60,7 @@ public class BookingMenu {
                 Update updateBooking = new Update();
 
                 // Calling the UpdateBookingRequestSystem method of the updateBooking object.
-                updateBooking.UpdateBookingRequestSystem();
+                updateBooking.updateBookingRequestSystem();
                 break;
 
             // If the user enters an invalid choice:

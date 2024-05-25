@@ -11,16 +11,18 @@ public class CreateObjects {
     private String userName;
     private String email;
     private String roomType;
+    private String roomNumber;
     private Time checkInTime;
     private Time checkOutTime;
     private Date checkInDate;
     private Date checkOutDate;
     private int bookingId;
 
-    public CreateObjects(String userName, String email, String roomType, Time checkInTime, Time checkOutTime, Date checkInDate, Date checkOutDate) {
+    public CreateObjects(String userName, String email, String roomType, String roomNumber, Time checkInTime, Time checkOutTime, Date checkInDate, Date checkOutDate) {
         this.userName = userName;
         this.email = email;
         this.roomType = roomType;
+        this.roomNumber = roomNumber;
         this.checkInTime = checkInTime;
         this.checkOutTime = checkOutTime;
         this.checkInDate = checkInDate;
@@ -50,6 +52,13 @@ public class CreateObjects {
     public void setRoomType(String roomType) {
         this.roomType = roomType;
     }
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
 
     public Time getCheckInTime() {
         return checkInTime;

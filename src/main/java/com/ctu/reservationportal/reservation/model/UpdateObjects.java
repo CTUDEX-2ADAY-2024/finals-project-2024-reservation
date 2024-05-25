@@ -1,160 +1,180 @@
 package main.java.com.ctu.reservationportal.reservation.model;
 
-import main.java.com.ctu.reservationportal.reservation.infrastructure.Update;
+import java.sql.Time;
+import java.sql.Date;
 
 /**
  * The type Update objects.
  */
 public class UpdateObjects {
-    private final Update updateBookingInfo;
-    private String roomInformation;
-    private String date;
-    private String time;
+
+    private String username;
+    private String email;
+    private String roomType;
+    private Time checkInTime;
+    private Time checkOutTime;
+    private Date checkInDate;
+    private Date checkOutDate;
+    private int bookingID;
+
+    public String roomNumber;
+
+    public UpdateObjects() {
+        this.bookingID = bookingID;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.roomNumber = roomNumber;
+        this.username = username;
+        this.email = email;
+        this.roomType =roomType;
+    }
 
     /**
      * Instantiates a new Update objects.
      *
-     * @param updateBookingInfo the update booking
+     * @param updateRecords the update records service
      */
-    public UpdateObjects(Update updateBookingInfo) {
-        this.updateBookingInfo = updateBookingInfo;
-    }
 
     /**
-     * Gets room information.
+     * Gets username.
      *
-     * @return the room information
+     * @return the username
      */
-    public String getRoomInformation() {
-        return roomInformation;
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * Sets room information.
+     * Sets username.
      *
-     * @param roomInformation the room information
+     * @param username the username
      */
-    public void setRoomInformation(String roomInformation) {
-        this.roomInformation = roomInformation;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
-     * Gets date.
+     * Gets email.
      *
-     * @return the date
+     * @return the email
      */
-    public String getDate() {
-        return date;
+    public String getEmail() {
+        return email;
     }
 
     /**
-     * Sets date.
+     * Sets email.
      *
-     * @param date the date
+     * @param email the email
      */
-    public void setDate(String date) {
-        this.date = date;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     /**
-     * Gets time.
+     * Gets room type.
      *
-     * @return the time
+     * @return the room type
      */
-    public String getTime() {
-        return time;
+    public String getRoomType() {
+        return roomType;
     }
 
     /**
-     * Sets time.
+     * Sets room type.
      *
-     * @param time the time
+     * @param roomType the room type
      */
-    public void setTime(String time) {
-        this.time = time;
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(String roomNumber) {
     }
 
     /**
-     * Update booking details.
+     * Gets check-in time.
+     *
+     * @return the check-in time
      */
-    public void updateBookingDetails(String bookingID) {
-        UpdateObjects.Booking booking = new UpdateObjects.Booking(roomInformation, date, time);
-        updateBookingInfo.updateBookingInDB(bookingID, booking.getRoomInformation(), booking.getDate(), booking.getTime());
+    public Time getCheckInTime() {
+        return checkInTime;
     }
 
     /**
-     * The Booking class represents a booking with room information, date, and time.
+     * Sets check-in time.
+     *
+     * @param checkInTime the check-in time
      */
-    public static class Booking {
-        private String roomInformation;
-        private String date;
-        private String time;
+    public void setCheckInTime(Time checkInTime) {
+        this.checkInTime = checkInTime;
+    }
 
-        /**
-         * Instantiates a new Booking.
-         *
-         * @param roomInformation the room information
-         * @param date            the date
-         * @param time            the time
-         */
-        public Booking(String roomInformation, String date, String time) {
-            this.roomInformation = roomInformation;
-            this.date = date;
-            this.time = time;
-        }
+    /**
+     * Gets check-out time.
+     *
+     * @return the check-out time
+     */
+    public Time getCheckOutTime() {
+        return checkOutTime;
+    }
 
-        /**
-         * Gets room information.
-         *
-         * @return the room information
-         */
-        public String getRoomInformation() {
-            return roomInformation;
-        }
+    /**
+     * Sets check-out time.
+     *
+     * @param checkOutTime the check-out time
+     */
+    public void setCheckOutTime(Time checkOutTime) {
+        this.checkOutTime = checkOutTime;
+    }
 
-        /**
-         * Sets room information.
-         *
-         * @param roomInformation the room information
-         */
-        public void setRoomInformation(String roomInformation) {
-            this.roomInformation = roomInformation;
-        }
+    /**
+     * Gets check-in date.
+     *
+     * @return the check-in date
+     */
+    public Date getCheckInDate() {
+        return checkInDate;
+    }
 
-        /**
-         * Gets date.
-         *
-         * @return the date
-         */
-        public String getDate() {
-            return date;
-        }
+    /**
+     * Sets check-in date.
+     *
+     * @param checkInDate the check-in date
+     */
+    public void setCheckInDate(Date checkInDate) {
+        this.checkInDate = checkInDate;
+    }
 
-        /**
-         * Sets date.
-         *
-         * @param date the date
-         */
-        public void setDate(String date) {
-            this.date = date;
-        }
+    /**
+     * Gets check-out date.
+     *
+     * @return the check-out date
+     */
+    public Date getCheckOutDate() {
+        return checkOutDate;
+    }
 
-        /**
-         * Gets time.
-         *
-         * @return the time
-         */
-        public String getTime() {
-            return time;
-        }
+    /**
+     * Sets check-out date.
+     *
+     * @param checkOutDate the check-out date
+     */
+    public void setCheckOutDate(Date checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
 
-        /**
-         * Sets time.
-         *
-         * @param time the time
-         */
-        public void setTime(String time) {
-            this.time = time;
-        }
+    public int getBookingID() {
+        return bookingID;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingID = bookingId;
     }
 }

@@ -2,6 +2,7 @@
 package main.java.com.ctu.reservationportal.reservation.abstraction;
 // Import CreateObjects model class
 import main.java.com.ctu.reservationportal.reservation.model.CreateObjects;
+import main.java.com.ctu.reservationportal.reservation.model.UpdateObjects;
 // Import Connection class from java.sql package
 import java.sql.Connection;
 // Import DriverManager class from java.sql package
@@ -31,14 +32,15 @@ public class BookingValidator {
                 "root",
                 "mypassword");
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT COUNT(*) FROM BOOKINGDETAILS WHERE roomType=? AND checkInDate=? AND checkOutDate=? AND checkInTime<=? AND checkOutTime>=?")
+                     "SELECT COUNT(*) FROM BOOKINGDETAILS WHERE roomType=? AND roomNumber=? AND checkInDate=? AND checkOutDate=? AND checkInTime<=? AND checkOutTime>=? ")
         ) {
             // Setting parameters for the prepared statement
             preparedStatement.setString(1, createObjects.getRoomType());
-            preparedStatement.setDate(2, createObjects.getCheckInDate());
-            preparedStatement.setDate(3, createObjects.getCheckOutDate());
-            preparedStatement.setTime(4, createObjects.getCheckOutTime());
-            preparedStatement.setTime(5, createObjects.getCheckInTime());
+            preparedStatement.setString(2, createObjects.getRoomNumber());
+            preparedStatement.setDate(3, createObjects.getCheckInDate());
+            preparedStatement.setDate(4, createObjects.getCheckOutDate());
+            preparedStatement.setTime(5, createObjects.getCheckOutTime());
+            preparedStatement.setTime(6, createObjects.getCheckInTime());
 
             // Executing query
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -96,4 +98,5 @@ public class BookingValidator {
             return false;
         }
     }
+
 }
