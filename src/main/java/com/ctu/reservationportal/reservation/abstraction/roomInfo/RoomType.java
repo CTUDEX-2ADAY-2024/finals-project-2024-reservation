@@ -115,7 +115,7 @@ public class RoomType {
         @Override
         public void displayRoomInfo() {
             System.out.println("Room Type: " + roomType);
-            System.out.println("Classroom " + roomNumber);
+            System.out.println("Computer Laboratory " + roomNumber);
             System.out.println("Building: " + buildingLocation);
             System.out.println("Capacity: " + capacity);
             System.out.println("Status (Available/Occupied): " + roomStatus);
@@ -175,7 +175,7 @@ public class RoomType {
         @Override
         public void displayRoomInfo() {
             System.out.println("Room Type: " + roomType);
-            System.out.println("Classroom " + roomNumber);
+            System.out.println("Library " + roomNumber);
             System.out.println("Building: " + buildingLocation);
             System.out.println("Capacity: " + capacity);
             System.out.println("Status (Available/Occupied): " + roomStatus);
@@ -261,7 +261,7 @@ public class RoomType {
         @Override
         public void displayRoomInfo() {
             System.out.println("Room Type: " + roomType);
-            System.out.println("Classroom " + roomNumber);
+            System.out.println("SmartRoom " + roomNumber);
             System.out.println("Building: " + buildingLocation);
             System.out.println("Capacity: " + capacity);
             System.out.println("Status (Available/Occupied): " + roomStatus);

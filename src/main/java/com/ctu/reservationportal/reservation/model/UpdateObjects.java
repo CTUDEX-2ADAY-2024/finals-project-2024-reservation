@@ -95,8 +95,7 @@ public class UpdateObjects {
         return roomNumber;
     }
 
-    public void setRoomNumber(String roomNumber) {
-    }
+    public void setRoomNumber(String roomNumber) {this.roomNumber = roomNumber;}
 
     /**
      * Gets check-in time.

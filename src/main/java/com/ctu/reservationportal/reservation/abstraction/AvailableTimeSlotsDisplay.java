@@ -3,8 +3,10 @@ package main.java.com.ctu.reservationportal.reservation.abstraction;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.sql.Date;
 
+/**
+ * Class responsible for displaying available time slots for booking in a selected room within a specified date range.
+ */
 public class AvailableTimeSlotsDisplay {
 
     private static final Time OPERATING_START_TIME = Time.valueOf("00:00:00");
@@ -13,19 +15,17 @@ public class AvailableTimeSlotsDisplay {
     /**
      * Displays the available time slots for the selected room within the specified date range.
      *
-     * @param roomType    The type of room selected by the user.
-     * @param checkInDate The check-in date selected by the user.
-     * @param checkOutDate The check-out date selected by the user.
+     * @param roomType The type of room selected by the user.
      */
-    public void displayAvailableTimeSlots(String roomType, Date checkInDate, Date checkOutDate) {
+    public void displayAvailableTimeSlots(String roomType, String roomNumber) {
         // Retrieve booked time slots for the selected room and date range
-        Map<Time, Time> bookedTimeSlots = getBookedTimeSlots(roomType, checkInDate, checkOutDate);
+        Map<Time, Time> bookedTimeSlots = getBookedTimeSlots(roomType, roomNumber);
 
-        // Calculate available time slots based on booked slots
+        // Calculate available time slo ts based on booked slots
         List<String> availableTimeSlots = calculateAvailableTimeSlots(bookedTimeSlots);
 
         // Display available time slots to the user
-        System.out.println("\nAvailable Time Slots for " + roomType + " from " + checkInDate + " to " + checkOutDate + ":");
+        System.out.println("\nAvailable Time Slots for " + roomType + " from room no. " + roomNumber + ":");
         if (availableTimeSlots.isEmpty()) {
             System.out.println("No available time slots for the selected room and date range.");
         } else {
@@ -52,12 +52,11 @@ public class AvailableTimeSlotsDisplay {
     /**
      * Retrieves booked time slots for the selected room and date range from the database.
      *
-     * @param roomType    The type of room selected by the user.
-     * @param checkInDate The check-in date selected by the user.
-     * @param checkOutDate The check-out date selected by the user.
+     * @param roomType   The type of room selected by the user.
+     * @param roomNumber
      * @return A map of booked time slots with start and end times.
      */
-    private Map<Time, Time> getBookedTimeSlots(String roomType, Date checkInDate, Date checkOutDate) {
+    private Map<Time, Time> getBookedTimeSlots(String roomType, String roomNumber) {
         Map<Time, Time> bookedTimeSlots = new HashMap<>();
 
         // JDBC connection parameters
@@ -67,11 +66,10 @@ public class AvailableTimeSlotsDisplay {
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             // SQL query to retrieve booked time slots based on roomType and date range
-            String sql = "SELECT checkInTime, checkOutTime FROM BOOKINGDETAILS WHERE roomType = ? AND checkInDate >= ? AND checkInDate <= ?";
+            String sql = "SELECT checkInTime, checkOutTime FROM BOOKINGDETAILS WHERE roomType = ? AND roomNumber = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, roomType);
-                statement.setDate(2, checkInDate);
-                statement.setDate(3, checkOutDate);
+                statement.setString(2, roomNumber);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     // Iterate through the result set and populate bookedTimeSlots map
                     while (resultSet.next()) {
@@ -90,23 +88,30 @@ public class AvailableTimeSlotsDisplay {
     }
 
     /**
-     * Calculates available time slots based on booked slots and operating hours.
+     * Calculates the available time slots for booking based on the provided map of booked time slots.
      *
-     * @param bookedTimeSlots A map of booked time slots with start and end times.
-     * @return A list of available time slots formatted as strings.
+     * @param bookedTimeSlots A map containing the start and end times of already booked time slots.
+     *                        The keys represent the start times, and the values represent the end times.
+     * @return A list of strings representing the available time slots.
      */
     private List<String> calculateAvailableTimeSlots(Map<Time, Time> bookedTimeSlots) {
+        // Initialize a list to store the available time slots
         List<String> availableTimeSlots = new ArrayList<>();
 
+        // Initialize the current start time with the operating start time
         Time currentStartTime = OPERATING_START_TIME;
 
         // Sort booked time slots by start time
+        // Create a new list to store the booked time slots and sort them by start time
         List<Map.Entry<Time, Time>> sortedBookedSlots = new ArrayList<>(bookedTimeSlots.entrySet());
         sortedBookedSlots.sort(Map.Entry.comparingByKey());
 
+        // Iterate through the sorted booked time slots
         for (Map.Entry<Time, Time> entry : sortedBookedSlots) {
+            // Retrieve the start time and end time of each booked slot
             Time bookedStartTime = entry.getKey();
             Time bookedEndTime = entry.getValue();
+
 
             // If there is a gap between current start time and booked start time, it's an available slot
             if (currentStartTime.before(bookedStartTime)) {
@@ -123,5 +128,31 @@ public class AvailableTimeSlotsDisplay {
         }
 
         return availableTimeSlots;
+    }
+
+    /**
+     * Displays the available time slots for the selected room within the specified date range.
+     *
+     * @param roomType The type of room selected by the user.
+     */
+    public void updateTimeSlot(String roomType, String roomNumber) {
+        // Retrieve booked time slots for the selected room and date range
+        Map<Time, Time> bookedTimeSlots = getBookedTimeSlots(roomType, roomNumber);
+
+        // Calculate available time slo ts based on booked slots
+        List<String> availableTimeSlots = calculateAvailableTimeSlots(bookedTimeSlots);
+
+        // Display available time slots to the user
+        System.out.println("\nAvailable Time Slots for " + roomType + " from room no. " + roomNumber + ":");
+        if (availableTimeSlots.isEmpty()) {
+            System.out.println("No available time slots for the selected room and date range.");
+        } else {
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("Available Time Slots");
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------");
+            for (String timeSlot : availableTimeSlots) {
+                System.out.println(timeSlot);
+            }
+        }
     }
 }

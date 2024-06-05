@@ -61,11 +61,13 @@ public class CheckInOutTimeValidation {
                 }
             } else {
                 System.out.println("Error: Check-in date must be before check-out date.");
-                return false; // Check-in date is after check-out date
+                // Check-in date is after check-out date
+                return false;
             }
         } catch (DateTimeParseException e) {
             System.out.println("Error: Invalid date format. Please use the format YYYY-MM-DD.");
-            return false;  // Parsing error occurred, indicating invalid dates
+            // Parsing error occurred, indicating invalid dates
+            return false;
         }
     }
 }

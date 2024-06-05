@@ -32,7 +32,22 @@ public class BookingMenu {
         System.out.println("1. Create Booking Request\n2. Search and Retrieve Booking Request\n3. Update Booking Request");
 
         // Reading the user's choice from the menu.
-        int choice = input.nextInt();
+        int choice = 0;
+        boolean validChoice = false;
+        while (!validChoice) {
+            System.out.print("\nEnter your choice: ");
+            if (input.hasNextInt()) {
+                choice = input.nextInt();
+                if (choice >= 1 && choice <= 3) {
+                    validChoice = true;
+                } else {
+                    System.out.println("Invalid choice. Please enter a number between 1 and 3.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                input.next(); // Clear the input buffer
+            }
+        }
 
         // Switching based on the user's choice.
         switch (choice) {
@@ -63,10 +78,6 @@ public class BookingMenu {
                 updateBooking.updateBookingRequestSystem();
                 break;
 
-            // If the user enters an invalid choice:
-            default:
-                // Printing an error message.
-                System.out.println("Invalid Input, Please Try Again");
         }
     }
 }
