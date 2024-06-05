@@ -1,56 +1,83 @@
+// Package declaration for the BookingMenu class.
 package main.java.com.ctu.reservationportal.reservation.infrastructure;
 
-import main.java.com.ctu.reservationportal.reservation.dbservices.CreateTables;
-
+// Importing the Scanner class from the java.util package for user input.
 import java.util.Scanner;
 
 /**
- * The type Booking menu.
+ * The main menu for the Reservation Management Portal.
  */
 public class BookingMenu {
-    /**
-     * Main.
-     *
-     * @param args the args
-     */
-    public static void main(String[]args){
-        CreateTables createTables = new CreateTables();
 
+    /**
+     * Main method for the booking menu.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) {
+        // Creating a new Scanner object for user input.
         Scanner input = new Scanner(System.in);
 
+        // Printing a welcome message to the console.
+        System.out.println("------------Welcome to Reservation Management System--------------");
 
-        System.out.print("Welcome to Reservation Management System");
+        // Displaying the booking system menu options.
+        System.out.println("\nBooking System Menu:");
 
-        System.out.println(" \nBooking System Menu");
-        System.out.println("1. Create Booking Request\n2. Search and Retrieve Booking Request\n3. Update Booking Request:");
-        int choice = input.nextInt();
-        switch (choice){
+        // Print horizontal line
+        for (int i = 0; i < 130; i++) {
+            System.out.print("-");
+        }
+        System.out.println();
+        System.out.println("1. Create Booking Request\n2. Search and Retrieve Booking Request\n3. Update Booking Request");
 
-            case 1:
-                //Call the Create Booking Request Class
-                CreateBooking object1 = new CreateBooking();
-                object1.InputReceiver();
-                break;
-            case 2:
-                //Call the Search and Retrieve
-                Retrieve object2 = new Retrieve();
-                object2.SearchNRetrieveSystem();
-                break;
-            case 3:
-                UpdateBooking object3 = new UpdateBooking();
-                object3.UpdateBookingRequestSystem();
-                break;
-            default:
-                System.out.println("Invalid Input, Please Try Again");
-                return;
+        // Reading the user's choice from the menu.
+        int choice = 0;
+        boolean validChoice = false;
+        while (!validChoice) {
+            System.out.print("\nEnter your choice: ");
+            if (input.hasNextInt()) {
+                choice = input.nextInt();
+                if (choice >= 1 && choice <= 3) {
+                    validChoice = true;
+                } else {
+                    System.out.println("Invalid choice. Please enter a number between 1 and 3.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                input.next(); // Clear the input buffer
+            }
         }
 
+        // Switching based on the user's choice.
+        switch (choice) {
+            // If the user chooses option 1 (Create Booking Request):
+            case 1:
+                // Creating a new CreateBooking object.
+                Create createbooking = new Create();
+
+                // Calling the InputReceiver method of the createBooking object.
+                createbooking.inputReceiver();
+                break;
+
+            // If the user chooses option 2 (Search and Retrieve Booking Request):
+            case 2:
+                // Creating a new Retrieve object.
+                Retrieve retrieve = new Retrieve();
+
+                // Calling the SearchNRetrieveBookingSystem method of the retrieve object.
+                retrieve.searchAndRetrieveBooking();
+                break;
+
+            // If the user chooses option 3 (Update Booking Request):
+            case 3:
+                // Creating a new UpdateBooking object.
+                Update updateBooking = new Update();
+
+                // Calling the UpdateBookingRequestSystem method of the updateBooking object.
+                updateBooking.updateBookingRequestSystem();
+                break;
+
+        }
     }
-
-
-
-
-
-
-
-
+}
